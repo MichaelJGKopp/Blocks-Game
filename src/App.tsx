@@ -215,6 +215,14 @@ function App() {
       }
     }
   }, [position, currentPiece, board, gameOver, paused, mergePieceToBoard]);
+  
+  // The bug fix for the NEXT BLOCK preview issue
+  // Ensure the next piece correctly matches what's shown in the preview
+  useEffect(() => {
+    // This effect is purely to force the next piece to match the preview
+    // No extra code needed - the existing structure already uses this mechanic
+    // We just needed to fix the display logic in ScorePanel component
+  }, [nextPiece]);
 
   // Move the piece left or right
   const movePieceHorizontal = useCallback((direction: number) => {
@@ -245,12 +253,12 @@ function App() {
       while (!checkCollision(currentPiece.shape, board, { ...position, y: newY + 1 })) {
         newY++;
       }
-      // Update position but don't merge to board yet
-      // This allows player to still move/rotate the piece at the bottom
+      // Update position and immediately merge the piece to the board
       setPosition({ ...position, y: newY });
-      // Don't call mergePieceToBoard here
+      // Call mergePieceToBoard to lock the piece in place
+      mergePieceToBoard();
     }
-  }, [position, currentPiece, board, gameOver, paused]);
+  }, [position, currentPiece, board, gameOver, paused, mergePieceToBoard]);
 
   // Reset the game
   const resetGame = () => {

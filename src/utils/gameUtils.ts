@@ -92,10 +92,25 @@ export const createEmptyBoard = (width: number, height: number): number[][] => {
   return Array(height).fill(null).map(() => Array(width).fill(0));
 };
 
-// Generate a random block piece
+// Track the last generated block type to avoid repeats
+let lastBlockType: BlockType | null = null;
+
+// Generate a random block piece, ensuring it's not the same as the previous one
 export const generateRandomPiece = (): Block => {
   const blockTypes: BlockType[] = ['I', 'J', 'L', 'O', 'S', 'T', 'Z'];
-  const randomType = blockTypes[Math.floor(Math.random() * blockTypes.length)];
+  
+  // If we have a previous block type, filter it out from possible options
+  let availableTypes = lastBlockType 
+    ? blockTypes.filter(type => type !== lastBlockType) 
+    : blockTypes;
+  
+  // Pick a random type from available options
+  const randomIndex = Math.floor(Math.random() * availableTypes.length);
+  const randomType = availableTypes[randomIndex];
+  
+  // Update the last block type for next time
+  lastBlockType = randomType;
+  
   // Create a deep copy to ensure no references are shared
   return JSON.parse(JSON.stringify(BLOCKS[randomType]));
 };

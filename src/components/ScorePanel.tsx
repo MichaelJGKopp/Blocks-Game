@@ -15,34 +15,9 @@ const ScorePanel: React.FC<ScorePanelProps> = ({ score, level, lines, nextPiece,
   const getPreviewShape = () => {
     const shape = nextPiece.shape;
     
-    // Find the actual dimensions of the piece (excluding empty rows/cols)
-    let minRow = shape.length;
-    let maxRow = 0;
-    let minCol = shape[0].length;
-    let maxCol = 0;
-    
-    for (let y = 0; y < shape.length; y++) {
-      for (let x = 0; x < shape[y].length; x++) {
-        if (shape[y][x] !== 0) {
-          minRow = Math.min(minRow, y);
-          maxRow = Math.max(maxRow, y);
-          minCol = Math.min(minCol, x);
-          maxCol = Math.max(maxCol, x);
-        }
-      }
-    }
-    
-    // Extract the actual shape without empty borders
-    const trimmedShape = [];
-    for (let y = minRow; y <= maxRow; y++) {
-      const row = [];
-      for (let x = minCol; x <= maxCol; x++) {
-        row.push(shape[y][x]);
-      }
-      trimmedShape.push(row);
-    }
-    
-    return trimmedShape;
+    // Make sure we're using the actual shape value and not just color
+    // This ensures the shape shown in the preview matches exactly what comes next
+    return shape.map(row => row.map(cell => cell !== 0 ? 1 : 0));
   };
 
   const previewShape = getPreviewShape();
@@ -205,7 +180,7 @@ const ScorePanel: React.FC<ScorePanelProps> = ({ score, level, lines, nextPiece,
             alignItems: 'center',
             p: 1,
             minHeight: '100px', // Ensuring enough vertical space
-            bgcolor: darkMode ? 'rgba(0,0,0,0.4)' : 'rgba(240, 240, 245, 0.6)',
+            bgcolor: darkMode ? 'black' : '#eaeaea', // Match main game board background
             border: darkMode ? '1px solid #333' : '1px solid #dee2e6',
             borderRadius: darkMode ? 0 : 8,
           }}
@@ -232,18 +207,14 @@ const ScorePanel: React.FC<ScorePanelProps> = ({ score, level, lines, nextPiece,
                               ? neonColors[nextPiece.color as keyof typeof neonColors] 
                               : pastelColors[nextPiece.color as keyof typeof pastelColors])
                           : 'transparent',
+                        // Simple borders matching the main game board
                         border: cell !== 0 
                           ? (darkMode 
-                              ? '1px solid rgba(255,255,255,0.3)' 
-                              : '1px solid rgba(0,0,0,0.1)')
+                              ? '2px solid rgba(255,255,255,0.3)' 
+                              : '1px solid rgba(0,0,0,0.15)')
                           : 'none',
                         boxSizing: 'border-box',
-                        boxShadow: cell !== 0 
-                          ? (darkMode 
-                              ? 'inset 0 0 5px rgba(255,255,255,0.5)'
-                              : 'inset 0 0 3px rgba(0,0,0,0.2)')
-                          : 'none',
-                        borderRadius: darkMode ? 0 : 2,
+                        borderRadius: darkMode ? 0 : 0.5, // Match main board block's borderRadius
                       }}
                     />
                   </Grid>
@@ -253,25 +224,25 @@ const ScorePanel: React.FC<ScorePanelProps> = ({ score, level, lines, nextPiece,
           </Grid>
         </Box>
 
-        {/* Game controls instructions with improved contrast and larger font */}
+        {/* Game controls instructions */}
         <Box 
-          mt={3} 
+          mt={3}
           sx={{
             p: 1.5,
-            bgcolor: darkMode ? '#000' : '#e9ecef', 
-            borderRadius: darkMode ? 0 : 2,
+            bgcolor: darkMode ? 'rgba(0,0,0,0.6)' : 'rgba(240, 240, 245, 0.6)',
             border: darkMode ? '1px solid #333' : '1px solid #dee2e6',
+            borderRadius: darkMode ? 0 : 8,
           }}
         >
           <Typography 
             variant="body2" 
             sx={{ 
               fontFamily: darkMode ? '"Press Start 2P", cursive' : '"Poppins", sans-serif',
-              color: darkMode ? '#00ff00' : '#495057',
-              fontSize: darkMode ? '0.7rem' : '0.8rem',
-              mb: 1,
-              fontWeight: darkMode ? 400 : 700,
-              textShadow: darkMode ? '0 0 2px #00ff00' : 'none',
+              color: darkMode ? '#00ff00' : '#6c757d',
+              fontSize: darkMode ? '0.8rem' : '0.7rem', // Increased font size in night mode
+              mb: 1.5,
+              fontWeight: darkMode ? 400 : 600,
+              textShadow: darkMode ? '0 0 3px #00ff00' : 'none',
             }}
           >
             CONTROLS
@@ -280,10 +251,11 @@ const ScorePanel: React.FC<ScorePanelProps> = ({ score, level, lines, nextPiece,
             variant="body2" 
             sx={{ 
               fontFamily: darkMode ? 'monospace' : '"Poppins", sans-serif',
-              color: darkMode ? '#fff' : '#000',
-              fontSize: darkMode ? '0.7rem' : '0.8rem',
+              color: darkMode ? '#ffffff' : '#6c757d',
+              fontSize: darkMode ? '0.8rem' : '0.7rem', // Increased font size in night mode
               mb: 0.8,
-              fontWeight: '500',
+              letterSpacing: darkMode ? '0.05em' : 'normal',
+              textShadow: darkMode ? '0 0 2px rgba(255,255,255,0.5)' : 'none',
             }}
           >
             ← → : Move
@@ -292,10 +264,11 @@ const ScorePanel: React.FC<ScorePanelProps> = ({ score, level, lines, nextPiece,
             variant="body2" 
             sx={{ 
               fontFamily: darkMode ? 'monospace' : '"Poppins", sans-serif',
-              color: darkMode ? '#fff' : '#000',
-              fontSize: darkMode ? '0.7rem' : '0.8rem',
+              color: darkMode ? '#ffffff' : '#6c757d',
+              fontSize: darkMode ? '0.8rem' : '0.7rem', // Increased font size in night mode
               mb: 0.8,
-              fontWeight: '500',
+              letterSpacing: darkMode ? '0.05em' : 'normal',
+              textShadow: darkMode ? '0 0 2px rgba(255,255,255,0.5)' : 'none',
             }}
           >
             ↑ : Rotate
@@ -304,10 +277,11 @@ const ScorePanel: React.FC<ScorePanelProps> = ({ score, level, lines, nextPiece,
             variant="body2" 
             sx={{ 
               fontFamily: darkMode ? 'monospace' : '"Poppins", sans-serif',
-              color: darkMode ? '#fff' : '#000',
-              fontSize: darkMode ? '0.7rem' : '0.8rem',
+              color: darkMode ? '#ffffff' : '#6c757d',
+              fontSize: darkMode ? '0.8rem' : '0.7rem', // Increased font size in night mode
               mb: 0.8,
-              fontWeight: '500',
+              letterSpacing: darkMode ? '0.05em' : 'normal',
+              textShadow: darkMode ? '0 0 2px rgba(255,255,255,0.5)' : 'none',
             }}
           >
             ↓ : Soft Drop
@@ -316,10 +290,11 @@ const ScorePanel: React.FC<ScorePanelProps> = ({ score, level, lines, nextPiece,
             variant="body2" 
             sx={{ 
               fontFamily: darkMode ? 'monospace' : '"Poppins", sans-serif',
-              color: darkMode ? '#fff' : '#000',
-              fontSize: darkMode ? '0.7rem' : '0.8rem',
+              color: darkMode ? '#ffffff' : '#6c757d', 
+              fontSize: darkMode ? '0.8rem' : '0.7rem', // Increased font size in night mode
               mb: 0.8,
-              fontWeight: '500',
+              letterSpacing: darkMode ? '0.05em' : 'normal',
+              textShadow: darkMode ? '0 0 2px rgba(255,255,255,0.5)' : 'none',
             }}
           >
             SPACE : Hard Drop
@@ -328,9 +303,10 @@ const ScorePanel: React.FC<ScorePanelProps> = ({ score, level, lines, nextPiece,
             variant="body2" 
             sx={{ 
               fontFamily: darkMode ? 'monospace' : '"Poppins", sans-serif',
-              color: darkMode ? '#fff' : '#000',
-              fontSize: darkMode ? '0.7rem' : '0.8rem',
-              fontWeight: '500',
+              color: darkMode ? '#ffffff' : '#6c757d',
+              fontSize: darkMode ? '0.8rem' : '0.7rem', // Increased font size in night mode
+              letterSpacing: darkMode ? '0.05em' : 'normal',
+              textShadow: darkMode ? '0 0 2px rgba(255,255,255,0.5)' : 'none',
             }}
           >
             P : Pause

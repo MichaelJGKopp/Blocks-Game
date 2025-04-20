@@ -74,7 +74,7 @@ const GameControls: React.FC<GameControlsProps> = ({
       }}
     >
       {/* Action buttons (Reset/Pause) */}
-      <Box sx={{ mb: 2 }}>
+      <Box sx={{ mb: 3 }}>
         <Grid container spacing={1} justifyContent="center">
           <Grid item xs={6} component="div">
             <Button 
@@ -100,53 +100,59 @@ const GameControls: React.FC<GameControlsProps> = ({
         </Grid>
       </Box>
 
-      {/* Direction controls */}
-      <Box sx={{ mb: 2 }}>
-        <Grid container spacing={1} alignItems="center" justifyContent="center">
-          <Grid item xs={4} component="div"></Grid>
-          <Grid item xs={4} component="div">
+      {/* Direction controls - Cross layout */}
+      <Box sx={{ mb: 3 }}>
+        {/* Top row - Up button */}
+        <Box display="flex" justifyContent="center" mb={1}>
+          <Box width="33%">
             <Button
+              fullWidth
               variant="contained"
               onClick={() => onRotate()}
               sx={buttonSx}
             >
               <KeyboardArrowUpIcon />
             </Button>
-          </Grid>
-          <Grid item xs={4} component="div"></Grid>
-          
-          <Grid item xs={4} component="div">
+          </Box>
+        </Box>
+        
+        {/* Middle row - Left and Right buttons */}
+        <Box display="flex" justifyContent="center" mb={1}>
+          <Box width="33%" mr={1}>
             <Button
+              fullWidth
               variant="contained"
               onClick={() => onMove(-1)}
               sx={buttonSx}
             >
               <KeyboardArrowLeftIcon />
             </Button>
-          </Grid>
-          <Grid item xs={4} component="div">
+          </Box>
+          <Box width="33%" ml={1}>
             <Button
+              fullWidth
               variant="contained"
               onClick={() => onMove(1)}
               sx={buttonSx}
             >
               <KeyboardArrowRightIcon />
             </Button>
-          </Grid>
-          <Grid item xs={4} component="div"></Grid>
-          
-          <Grid item xs={4} component="div"></Grid>
-          <Grid item xs={4} component="div">
+          </Box>
+        </Box>
+        
+        {/* Bottom row - Down button */}
+        <Box display="flex" justifyContent="center">
+          <Box width="33%">
             <Button
+              fullWidth
               variant="contained"
-              onClick={() => onMoveDown()} // Changed to use onMoveDown
+              onClick={() => onMoveDown()}
               sx={buttonSx}
             >
               <KeyboardArrowDownIcon />
             </Button>
-          </Grid>
-          <Grid item xs={4} component="div"></Grid>
-        </Grid>
+          </Box>
+        </Box>
       </Box>
 
       {/* Hard drop button */}

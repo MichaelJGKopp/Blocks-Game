@@ -10,6 +10,42 @@ interface ScorePanelProps {
 }
 
 const ScorePanel: React.FC<ScorePanelProps> = ({ score, level, lines, nextPiece }) => {
+  // Helper function to center the tetromino in the preview
+  const getPreviewShape = () => {
+    const shape = nextPiece.shape;
+    
+    // Find the actual dimensions of the piece (excluding empty rows/cols)
+    let minRow = shape.length;
+    let maxRow = 0;
+    let minCol = shape[0].length;
+    let maxCol = 0;
+    
+    for (let y = 0; y < shape.length; y++) {
+      for (let x = 0; x < shape[y].length; x++) {
+        if (shape[y][x] !== 0) {
+          minRow = Math.min(minRow, y);
+          maxRow = Math.max(maxRow, y);
+          minCol = Math.min(minCol, x);
+          maxCol = Math.max(maxCol, x);
+        }
+      }
+    }
+    
+    // Extract the actual shape without empty borders
+    const trimmedShape = [];
+    for (let y = minRow; y <= maxRow; y++) {
+      const row = [];
+      for (let x = minCol; x <= maxCol; x++) {
+        row.push(shape[y][x]);
+      }
+      trimmedShape.push(row);
+    }
+    
+    return trimmedShape;
+  };
+
+  const previewShape = getPreviewShape();
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       {/* Score section */}
@@ -132,26 +168,28 @@ const ScorePanel: React.FC<ScorePanelProps> = ({ score, level, lines, nextPiece 
             justifyContent: 'center',
             alignItems: 'center',
             p: 1,
+            minHeight: '100px', // Ensuring enough vertical space
             bgcolor: 'rgba(0,0,0,0.4)',
             border: '1px solid #333',
           }}
         >
           <Grid 
             container 
-            spacing={0}
+            justifyContent="center"
+            alignItems="center"
             sx={{ 
               width: 'auto', 
               height: 'auto',
             }}
           >
-            {nextPiece.shape.map((row, rowIndex) => (
-              <Grid key={`next-row-${rowIndex}`} container item xs={12} component="div">
+            {previewShape.map((row, rowIndex) => (
+              <Grid key={`next-row-${rowIndex}`} container item xs={12} justifyContent="center" component="div">
                 {row.map((cell, cellIndex) => (
                   <Grid item key={`next-cell-${rowIndex}-${cellIndex}`} component="div">
                     <Box
                       sx={{
-                        width: 20,
-                        height: 20,
+                        width: 25,
+                        height: 25,
                         backgroundColor: cell !== 0 ? COLORS[nextPiece.color] : 'transparent',
                         border: cell !== 0 ? '1px solid rgba(255,255,255,0.3)' : 'none',
                         boxSizing: 'border-box',

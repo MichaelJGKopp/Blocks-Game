@@ -176,10 +176,12 @@ function App() {
       while (!checkCollision(currentPiece.shape, board, { ...position, y: newY + 1 })) {
         newY++;
       }
+      // Update position but don't merge to board yet
+      // This allows player to still move/rotate the piece at the bottom
       setPosition({ ...position, y: newY });
-      mergePieceToBoard();
+      // Don't call mergePieceToBoard here
     }
-  }, [position, currentPiece, board, gameOver, paused, mergePieceToBoard]);
+  }, [position, currentPiece, board, gameOver, paused]);
 
   // Reset the game
   const resetGame = () => {

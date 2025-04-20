@@ -253,12 +253,41 @@ function App() {
       while (!checkCollision(currentPiece.shape, board, { ...position, y: newY + 1 })) {
         newY++;
       }
-      // Update position and immediately merge the piece to the board
-      setPosition({ ...position, y: newY });
-      // Call mergePieceToBoard to lock the piece in place
-      mergePieceToBoard();
+      
+      // Instead of updating position first and then merging, 
+      // create a new board that includes the current piece at the drop location
+      const newBoard = [...board];
+      
+      // Add the current piece to the board at the drop position
+      currentPiece.shape.forEach((row: number[], y: number) => {
+        row.forEach((value: number, x: number) => {
+          if (value !== 0) {
+            const boardY = y + newY;
+            const boardX = x + position.x;
+            if (boardY >= 0 && boardY < BOARD_HEIGHT && boardX >= 0 && boardX < BOARD_WIDTH) {
+              newBoard[boardY][boardX] = currentPiece.color;
+            }
+          }
+        });
+      });
+      
+      // Set the updated board
+      setBoard(newBoard);
+      
+      // Move to the next piece
+      setCurrentPiece(nextPiece);
+      setNextPiece(generateRandomPiece());
+      setPosition({ x: Math.floor(BOARD_WIDTH / 2) - 2, y: 0 });
+      
+      // Check for game over
+      if (checkCollision(nextPiece.shape, newBoard, { x: Math.floor(BOARD_WIDTH / 2) - 2, y: 0 })) {
+        setGameOver(true);
+      }
+      
+      // Check for completed lines
+      clearLines();
     }
-  }, [position, currentPiece, board, gameOver, paused, mergePieceToBoard]);
+  }, [position, currentPiece, nextPiece, board, gameOver, paused, clearLines]);
 
   // Reset the game
   const resetGame = () => {

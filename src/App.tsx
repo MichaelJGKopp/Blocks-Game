@@ -250,15 +250,16 @@ function App() {
   const dropPiece = useCallback(() => {
     if (!gameOver && !paused) {
       let newY = position.y;
+      
+      // Find the lowest possible position
       while (!checkCollision(currentPiece.shape, board, { ...position, y: newY + 1 })) {
         newY++;
       }
       
-      // Instead of updating position first and then merging, 
-      // create a new board that includes the current piece at the drop location
-      const newBoard = [...board];
+      // Create a new board with the current piece merged at the drop location
+      const newBoard = JSON.parse(JSON.stringify(board));
       
-      // Add the current piece to the board at the drop position
+      // Add the current piece to the new board at the drop position
       currentPiece.shape.forEach((row: number[], y: number) => {
         row.forEach((value: number, x: number) => {
           if (value !== 0) {
@@ -271,20 +272,21 @@ function App() {
         });
       });
       
-      // Set the updated board
+      // First update the board with the dropped piece
       setBoard(newBoard);
       
-      // Move to the next piece
+      // Then prepare the next piece
+      const nextRandomPiece = generateRandomPiece();
       setCurrentPiece(nextPiece);
-      setNextPiece(generateRandomPiece());
+      setNextPiece(nextRandomPiece);
       setPosition({ x: Math.floor(BOARD_WIDTH / 2) - 2, y: 0 });
       
-      // Check for game over
+      // Check for game over with the new piece
       if (checkCollision(nextPiece.shape, newBoard, { x: Math.floor(BOARD_WIDTH / 2) - 2, y: 0 })) {
         setGameOver(true);
       }
       
-      // Check for completed lines
+      // Check and clear completed lines
       clearLines();
     }
   }, [position, currentPiece, nextPiece, board, gameOver, paused, clearLines]);

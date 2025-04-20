@@ -1,15 +1,15 @@
-// Tetromino types
-export type TetrominoType = 'I' | 'J' | 'L' | 'O' | 'S' | 'T' | 'Z';
+// Block types
+export type BlockType = 'I' | 'J' | 'L' | 'O' | 'S' | 'T' | 'Z';
 
-// Tetromino piece with shape and color
-export interface Tetromino {
+// Block piece with shape and color
+export interface Block {
   shape: number[][];
   color: number;  // Color represented by a number 1-7
-  type: TetrominoType;
+  type: BlockType;
 }
 
-// Tetromino shapes defined as matrices
-export const TETROMINOES: Record<TetrominoType, Tetromino> = {
+// Block shapes defined as matrices
+export const BLOCKS: Record<BlockType, Block> = {
   I: {
     shape: [
       [0, 0, 0, 0],
@@ -75,7 +75,7 @@ export const TETROMINOES: Record<TetrominoType, Tetromino> = {
   },
 };
 
-// Color mapping for the tetrominos
+// Color mapping for the blocks
 export const COLORS = [
   'transparent',   // 0: Empty cell
   '#00ffff',       // 1: Cyan (I)
@@ -92,14 +92,15 @@ export const createEmptyBoard = (width: number, height: number): number[][] => {
   return Array(height).fill(null).map(() => Array(width).fill(0));
 };
 
-// Generate a random tetromino piece
-export const generateRandomPiece = (): Tetromino => {
-  const tetrominos: TetrominoType[] = ['I', 'J', 'L', 'O', 'S', 'T', 'Z'];
-  const randomType = tetrominos[Math.floor(Math.random() * tetrominos.length)];
-  return { ...TETROMINOES[randomType] };
+// Generate a random block piece
+export const generateRandomPiece = (): Block => {
+  const blockTypes: BlockType[] = ['I', 'J', 'L', 'O', 'S', 'T', 'Z'];
+  const randomType = blockTypes[Math.floor(Math.random() * blockTypes.length)];
+  // Create a deep copy to ensure no references are shared
+  return JSON.parse(JSON.stringify(BLOCKS[randomType]));
 };
 
-// Rotate a matrix (for tetromino rotation)
+// Rotate a matrix (for block rotation)
 export const rotateMatrix = (matrix: number[][]): number[][] => {
   const size = matrix.length;
   const rotated: number[][] = [];

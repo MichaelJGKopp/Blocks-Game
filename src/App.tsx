@@ -1,13 +1,69 @@
 import { useState, useEffect, useCallback } from 'react';
-import { ThemeProvider, createTheme, CssBaseline, Box, Typography, Container } from '@mui/material';
+import { ThemeProvider, createTheme, CssBaseline, Box, Typography, Container, IconButton } from '@mui/material';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 import './App.css';
-import TetrisBoard from './components/TetrisBoard';
+import BlocksBoard from './components/BlocksBoard';
 import GameControls from './components/GameControls';
 import ScorePanel from './components/ScorePanel';
-import { generateRandomPiece, rotateMatrix, checkCollision, createEmptyBoard, Tetromino } from './utils/gameUtils';
+import { generateRandomPiece, rotateMatrix, checkCollision, createEmptyBoard, Block } from './utils/gameUtils';
 
-// Create a retro-themed dark theme
-const theme = createTheme({
+// Light theme (day mode) with pastel colors
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#80b3ff', // Pastel blue
+    },
+    secondary: {
+      main: '#ffadad', // Pastel pink
+    },
+    background: {
+      default: '#f8f9fa',
+      paper: '#ffffff',
+    },
+    text: {
+      primary: '#495057',
+      secondary: '#6c757d',
+    }
+  },
+  typography: {
+    fontFamily: '"Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
+    h1: {
+      fontSize: '2.5rem',
+      fontWeight: 600,
+      letterSpacing: '0.02em',
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
+          fontFamily: '"Poppins", sans-serif',
+          fontWeight: 500,
+          padding: '8px 16px',
+          boxShadow: '0px 2px 4px rgba(0,0,0,0.1)',
+          transition: 'all 0.2s',
+          '&:hover': {
+            boxShadow: '0px 4px 8px rgba(0,0,0,0.15)',
+            transform: 'translateY(-2px)',
+          },
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: 16,
+        },
+      },
+    },
+  },
+});
+
+// Dark theme (night mode) with retro style
+const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
@@ -42,6 +98,13 @@ const theme = createTheme({
         },
       },
     },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: 0,
+        },
+      },
+    },
   },
 });
 
@@ -63,6 +126,12 @@ function App() {
   const [score, setScore] = useState(0);
   const [level, setLevel] = useState(1);
   const [lines, setLines] = useState(0);
+  const [darkMode, setDarkMode] = useState(false);
+
+  // Toggle theme between day and night mode
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+  };
 
   // Handle completed lines
   const clearLines = useCallback(() => {
@@ -104,7 +173,7 @@ function App() {
     }
   }, [board, level]);
 
-  // Merge the current tetromino into the board
+  // Merge the current block into the board
   const mergePieceToBoard = useCallback(() => {
     const newBoard = [...board];
     
@@ -253,48 +322,105 @@ function App() {
     }
   }, [movePieceDown, dropTime, gameOver, paused]);
 
+  // Current active theme based on mode
+  const theme = darkMode ? darkTheme : lightTheme;
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Container maxWidth="lg" sx={{ 
-        height: '100vh', 
-        display: 'flex', 
-        flexDirection: 'column', 
-        justifyContent: 'center', 
-        alignItems: 'center',
-        background: 'radial-gradient(circle, #111111 0%, #000000 100%)',
-      }}>
-        <Typography variant="h1" component="h1" 
-          sx={{ 
-            fontFamily: '"Press Start 2P", cursive',
-            color: theme.palette.primary.main,
-            mb: 4,
-            textAlign: 'center',
-          }}>
-          RETRO TETRIS
-        </Typography>
+      <Container 
+        disableGutters
+        maxWidth={false}
+        sx={{ 
+          height: '100vh', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          justifyContent: 'center', 
+          alignItems: 'center',
+          background: darkMode ? '#000000' : '#f8f9fa', // Simple solid background color
+          overflow: 'hidden',
+          position: 'relative',
+        }}>
+        {/* Day/Night toggle button */}
+        <IconButton
+          onClick={toggleTheme}
+          sx={{
+            position: 'absolute',
+            top: 16,
+            right: 16,
+            backgroundColor: darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
+            color: darkMode ? '#fff' : '#000',
+            '&:hover': {
+              backgroundColor: darkMode ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)',
+            }
+          }}
+        >
+          {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
+        </IconButton>
         
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 4 }}>
-          <ScorePanel score={score} level={level} lines={lines} nextPiece={nextPiece} />
+        {/* Main game layout */}
+        <Box sx={{ 
+          width: '100%',
+          maxWidth: 1200,
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center',
+        }}>
+          {/* Title centered above all UI */}
+          <Typography variant="h1" component="h1" 
+            sx={{ 
+              fontFamily: theme.typography.fontFamily,
+              color: darkMode ? theme.palette.primary.main : theme.palette.text.primary,
+              mb: 4,
+              textAlign: 'center',
+              fontWeight: darkMode ? 400 : 700,
+              textShadow: darkMode ? '0 0 5px #00ff00, 0 0 10px #00ff00' : 'none',
+            }}>
+            BLOCKS
+          </Typography>
           
-          <TetrisBoard 
-            board={board} 
-            currentPiece={currentPiece} 
-            position={position} 
-            gameOver={gameOver}
-            paused={paused}
-          />
-          
-          <GameControls 
-            onReset={resetGame} 
-            onPause={togglePause} 
-            onMove={movePieceHorizontal} 
-            onRotate={rotatePiece} 
-            onDrop={dropPiece}
-            paused={paused}
-            gameOver={gameOver}
-            onMoveDown={movePieceDown}
-          />
+          {/* Game components container - all at same level */}
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: 'row',
+            flexWrap: 'wrap', 
+            justifyContent: 'center', 
+            alignItems: 'flex-start', // Aligns tops of all components
+            gap: 4, 
+            width: '100%' 
+          }}>
+            {/* Left panel - Score */}
+            <ScorePanel 
+              score={score} 
+              level={level} 
+              lines={lines} 
+              nextPiece={nextPiece}
+              darkMode={darkMode} 
+            />
+            
+            {/* Center - Game board */}
+            <BlocksBoard 
+              board={board} 
+              currentPiece={currentPiece} 
+              position={position} 
+              gameOver={gameOver}
+              paused={paused}
+              darkMode={darkMode}
+            />
+            
+            {/* Right panel - Controls */}
+            <GameControls 
+              onReset={resetGame} 
+              onPause={togglePause} 
+              onMove={movePieceHorizontal} 
+              onRotate={rotatePiece} 
+              onDrop={dropPiece}
+              paused={paused}
+              gameOver={gameOver}
+              onMoveDown={movePieceDown}
+              darkMode={darkMode}
+            />
+          </Box>
         </Box>
       </Container>
     </ThemeProvider>

@@ -17,7 +17,8 @@ interface GameControlsProps {
   onDrop: () => void;
   paused: boolean;
   gameOver: boolean;
-  onMoveDown: () => void; // Added for proper down movement
+  onMoveDown: () => void;
+  darkMode: boolean;
 }
 
 const GameControls: React.FC<GameControlsProps> = ({
@@ -28,14 +29,54 @@ const GameControls: React.FC<GameControlsProps> = ({
   onDrop,
   paused,
   gameOver,
-  onMoveDown, // Added for proper down movement
+  onMoveDown,
+  darkMode,
 }) => {
-  const buttonSx = {
+  // Light mode button styles
+  const lightButtonSx = {
     minWidth: 0,
     width: '100%',
     height: '100%',
     p: 1.5,
     fontSize: '1rem',
+    fontFamily: '"Poppins", sans-serif',
+    fontWeight: 500,
+    color: '#495057',
+    backgroundColor: '#e9ecef',
+    border: 'none',
+    borderRadius: 8,
+    transition: 'all 0.2s',
+    boxShadow: '0px 2px 4px rgba(0,0,0,0.1)',
+    '&:hover': {
+      backgroundColor: '#dee2e6',
+      boxShadow: '0px 4px 8px rgba(0,0,0,0.15)',
+      transform: 'translateY(-2px)',
+    },
+    '&:active': {
+      backgroundColor: '#ced4da',
+      transform: 'translateY(0)',
+    },
+  };
+
+  // Light mode action button styles (play/pause)
+  const lightActionButtonSx = {
+    ...lightButtonSx,
+    backgroundColor: paused ? '#ffcad4' : '#a8e6cf',
+    color: paused ? '#e63946' : '#087f5b',
+    '&:hover': {
+      backgroundColor: paused ? '#ffb3c1' : '#8bd8bd',
+      boxShadow: '0px 4px 8px rgba(0,0,0,0.15)',
+      transform: 'translateY(-2px)',
+    },
+  };
+
+  // Dark mode retro button styles
+  const darkButtonSx = {
+    minWidth: 0,
+    width: '100%',
+    height: '100%',
+    p: 1.5,
+    fontSize: '0.8rem',
     fontFamily: '"Press Start 2P", cursive',
     color: '#ffffff',
     backgroundColor: 'rgba(0, 255, 0, 0.1)',
@@ -52,8 +93,9 @@ const GameControls: React.FC<GameControlsProps> = ({
     },
   };
 
-  const actionButtonSx = {
-    ...buttonSx,
+  // Dark mode action button styles (play/pause)
+  const darkActionButtonSx = {
+    ...darkButtonSx,
     backgroundColor: paused ? 'rgba(255, 0, 0, 0.1)' : 'rgba(0, 255, 0, 0.1)',
     '&:hover': {
       backgroundColor: paused ? 'rgba(255, 0, 0, 0.2)' : 'rgba(0, 255, 0, 0.2)',
@@ -61,21 +103,28 @@ const GameControls: React.FC<GameControlsProps> = ({
     },
   };
 
+  // Use appropriate styles based on theme mode
+  const buttonSx = darkMode ? darkButtonSx : lightButtonSx;
+  const actionButtonSx = darkMode ? darkActionButtonSx : lightActionButtonSx;
+
   return (
     <Paper
-      elevation={3}
+      elevation={darkMode ? 3 : 2}
       sx={{ 
         p: 2,
-        bgcolor: '#111',
-        border: '2px solid #333',
-        boxShadow: '0 0 10px rgba(0, 255, 0, 0.5)',
+        bgcolor: darkMode ? '#111' : '#f8f9fa',
+        border: darkMode ? '2px solid #333' : '2px solid #e9ecef',
+        boxShadow: darkMode 
+          ? '0 0 10px rgba(0, 255, 0, 0.5)' 
+          : '0 0 10px rgba(173, 216, 230, 0.5)',
         width: '100%',
         maxWidth: 240,
+        borderRadius: darkMode ? 0 : 16,
       }}
     >
       {/* Action buttons (Reset/Pause) */}
       <Box sx={{ mb: 3 }}>
-        <Grid container spacing={1} justifyContent="center">
+        <Grid container spacing={darkMode ? 1 : 2} justifyContent="center">
           <Grid item xs={6} component="div">
             <Button 
               variant="contained" 
@@ -103,13 +152,16 @@ const GameControls: React.FC<GameControlsProps> = ({
       {/* Direction controls - Cross layout */}
       <Box sx={{ mb: 3 }}>
         {/* Top row - Up button */}
-        <Box display="flex" justifyContent="center" mb={1}>
+        <Box display="flex" justifyContent="center" mb={darkMode ? 1 : 1.5}>
           <Box width="33%">
             <Button
               fullWidth
               variant="contained"
               onClick={() => onRotate()}
-              sx={buttonSx}
+              sx={darkMode 
+                ? buttonSx 
+                : {...lightButtonSx, backgroundColor: '#bde0fe', color: '#1d3557'}
+              }
             >
               <KeyboardArrowUpIcon />
             </Button>
@@ -117,23 +169,29 @@ const GameControls: React.FC<GameControlsProps> = ({
         </Box>
         
         {/* Middle row - Left and Right buttons */}
-        <Box display="flex" justifyContent="center" mb={1}>
-          <Box width="33%" mr={1}>
+        <Box display="flex" justifyContent="center" mb={darkMode ? 1 : 1.5}>
+          <Box width="33%" mr={darkMode ? 1 : 1.5}>
             <Button
               fullWidth
               variant="contained"
               onClick={() => onMove(-1)}
-              sx={buttonSx}
+              sx={darkMode 
+                ? buttonSx 
+                : {...lightButtonSx, backgroundColor: '#bde0fe', color: '#1d3557'}
+              }
             >
               <KeyboardArrowLeftIcon />
             </Button>
           </Box>
-          <Box width="33%" ml={1}>
+          <Box width="33%" ml={darkMode ? 1 : 1.5}>
             <Button
               fullWidth
               variant="contained"
               onClick={() => onMove(1)}
-              sx={buttonSx}
+              sx={darkMode 
+                ? buttonSx 
+                : {...lightButtonSx, backgroundColor: '#bde0fe', color: '#1d3557'}
+              }
             >
               <KeyboardArrowRightIcon />
             </Button>
@@ -147,7 +205,10 @@ const GameControls: React.FC<GameControlsProps> = ({
               fullWidth
               variant="contained"
               onClick={() => onMoveDown()}
-              sx={buttonSx}
+              sx={darkMode 
+                ? buttonSx 
+                : {...lightButtonSx, backgroundColor: '#bde0fe', color: '#1d3557'}
+              }
             >
               <KeyboardArrowDownIcon />
             </Button>
@@ -162,14 +223,27 @@ const GameControls: React.FC<GameControlsProps> = ({
           onClick={onDrop}
           startIcon={<VerticalAlignBottomIcon />}
           fullWidth
-          sx={{
-            ...buttonSx,
-            backgroundColor: 'rgba(255, 255, 0, 0.1)',
-            '&:hover': {
-              backgroundColor: 'rgba(255, 255, 0, 0.2)',
-              boxShadow: '0 0 10px #ffff00',
-            },
-          }}
+          sx={darkMode
+            ? {
+                ...darkButtonSx,
+                backgroundColor: 'rgba(255, 255, 0, 0.1)',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 0, 0.2)',
+                  boxShadow: '0 0 10px #ffff00',
+                },
+              }
+            : {
+                ...lightButtonSx,
+                backgroundColor: '#ffd3b6',
+                color: '#e76f51',
+                fontWeight: 600,
+                '&:hover': {
+                  backgroundColor: '#ffcad4',
+                  boxShadow: '0px 4px 8px rgba(0,0,0,0.15)',
+                  transform: 'translateY(-2px)',
+                },
+              }
+          }
         >
           Hard Drop
         </Button>

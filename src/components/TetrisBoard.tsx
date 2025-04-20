@@ -1,16 +1,16 @@
 import React from 'react';
 import { Box, Paper } from '@mui/material';
-import { COLORS, Tetromino } from '../utils/gameUtils';
+import { COLORS, Block } from '../utils/gameUtils';
 
-interface TetrisBoardProps {
+interface BlocksBoardProps {
   board: number[][];
-  currentPiece: Tetromino;
+  currentPiece: Block;
   position: { x: number; y: number };
   gameOver: boolean;
   paused: boolean;
 }
 
-const TetrisBoard: React.FC<TetrisBoardProps> = ({
+const BlocksBoard: React.FC<BlocksBoardProps> = ({
   board,
   currentPiece,
   position,
@@ -41,15 +41,27 @@ const TetrisBoard: React.FC<TetrisBoardProps> = ({
 
   const displayBoard = createDisplayBoard();
 
+  // Pastel color mapping for blocks
+  const pastelColors = {
+    1: '#a8e6cf', // Pastel cyan/mint
+    2: '#aac4ff', // Pastel blue
+    3: '#ffd3b6', // Pastel orange
+    4: '#fdffb6', // Pastel yellow
+    5: '#bde0fe', // Pastel green/blue
+    6: '#d8bbff', // Pastel purple
+    7: '#ffadad'  // Pastel red/pink
+  };
+
   return (
     <Paper 
       elevation={3}
       sx={{ 
         p: 1,
-        bgcolor: 'black',
-        border: '4px solid #333',
-        boxShadow: '0 0 10px rgba(0, 255, 0, 0.5)',
+        bgcolor: '#f8f9fa',
+        border: '4px solid #e9ecef',
+        boxShadow: '0 0 10px rgba(173, 216, 230, 0.5)',
         position: 'relative',
+        borderRadius: 4,
       }}
     >
       {/* Game board */}
@@ -59,7 +71,7 @@ const TetrisBoard: React.FC<TetrisBoardProps> = ({
           gridTemplateRows: `repeat(${board.length}, 1fr)`,
           width: 'auto',
           height: 'auto',
-          borderRadius: 1,
+          borderRadius: 2,
           overflow: 'hidden',
         }}
       >
@@ -77,11 +89,12 @@ const TetrisBoard: React.FC<TetrisBoardProps> = ({
                 sx={{
                   width: 30,
                   height: 30,
-                  backgroundColor: COLORS[cell],
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  backgroundColor: cell !== 0 ? pastelColors[cell as keyof typeof pastelColors] : 'rgba(240, 240, 245, 0.6)',
+                  border: '1px solid rgba(222,226,230,0.5)',
                   boxSizing: 'border-box',
-                  boxShadow: cell !== 0 ? 'inset 0 0 8px rgba(255,255,255,0.5)' : 'none',
+                  boxShadow: cell !== 0 ? 'inset 0 0 4px rgba(255,255,255,0.8)' : 'none',
                   transition: 'background-color 0.1s ease',
+                  borderRadius: 0.5,
                 }}
               />
             ))}
@@ -98,24 +111,23 @@ const TetrisBoard: React.FC<TetrisBoardProps> = ({
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            backgroundColor: 'rgba(248, 249, 250, 0.8)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            color: gameOver ? '#ff0000' : '#00ff00',
-            fontFamily: '"Press Start 2P", cursive',
-            textShadow: gameOver 
-              ? '0 0 5px #ff0000, 0 0 10px #ff0000'
-              : '0 0 5px #00ff00, 0 0 10px #00ff00',
+            color: gameOver ? '#dc3545' : '#20c997',
+            fontFamily: '"Poppins", sans-serif',
+            borderRadius: 2,
             zIndex: 10,
           }}
         >
           <Box
             sx={{
-              fontSize: '2rem',
+              fontSize: '1.8rem',
               textAlign: 'center',
               p: 2,
+              fontWeight: 600,
               animation: 'pulse 1.5s infinite',
               '@keyframes pulse': {
                 '0%': {
@@ -138,4 +150,4 @@ const TetrisBoard: React.FC<TetrisBoardProps> = ({
   );
 };
 
-export default TetrisBoard;
+export default BlocksBoard;

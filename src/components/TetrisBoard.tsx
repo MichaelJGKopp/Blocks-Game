@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Paper } from '@mui/material';
-import { COLORS, Block } from '../utils/gameUtils';
+import { Block } from '../utils/gameUtils';
 
 interface BlocksBoardProps {
   board: number[][];

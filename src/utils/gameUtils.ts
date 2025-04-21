@@ -100,7 +100,7 @@ export const generateRandomPiece = (): Block => {
   const blockTypes: BlockType[] = ['I', 'J', 'L', 'O', 'S', 'T', 'Z'];
   
   // If we have a previous block type, filter it out from possible options
-  let availableTypes = lastBlockType 
+  const availableTypes = lastBlockType 
     ? blockTypes.filter(type => type !== lastBlockType) 
     : blockTypes;
   

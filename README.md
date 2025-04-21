@@ -1,54 +1,69 @@
-# React + TypeScript + Vite
+# Blocks Game
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern implementation of the classic Tetris-style block-stacking game built with React, TypeScript, and Material UI.
 
-Currently, two official plugins are available:
+![Blocks Game Screenshot](screenshot.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Play Online
 
-## Expanding the ESLint configuration
+Play the game directly in your browser: [Blocks Game](https://michaeljgkopp.github.io/Blocks-Game/)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Game Features
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- Classic Tetris-style gameplay with modern visuals
+- Responsive design that works on desktop and mobile
+- Score tracking and level progression
+- Game controls for movement, rotation, and speed
+- Pause/resume functionality
+- Game over detection
+
+## Technologies Used
+
+- React 19
+- TypeScript
+- Material UI 7
+- Vite
+
+## Development
+
+### Prerequisites
+
+- Node.js (version 18 or higher)
+- npm (comes with Node.js)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/michaeljgkopp/Blocks-Game.git
+
+# Navigate to the project directory
+cd Blocks-Game
+
+# Install dependencies
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Available Scripts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- `npm run dev` - Starts the development server
+- `npm run build` - Builds the app for production
+- `npm run preview` - Previews the production build locally
+- `npm run lint` - Runs ESLint to check for code quality issues
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## Deployment
+
+The game is deployed to GitHub Pages. To deploy your own version after making changes:
+
+1. Update the `base` property in `vite.config.ts` to match your GitHub repository name
+2. Build the project: `npm run build`
+3. Deploy to GitHub Pages using your preferred method
+
+## License
+
+MIT
+
+## Acknowledgments
+
+- Inspired by the classic Tetris game
+- Built with modern web technologies

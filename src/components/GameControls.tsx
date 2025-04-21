@@ -125,27 +125,29 @@ const GameControls: React.FC<GameControlsProps> = ({
       {/* Action buttons (Reset/Pause) */}
       <Box sx={{ mb: 3 }}>
         <Grid container spacing={darkMode ? 1 : 2} justifyContent="center">
-          <Grid item xs={6} component="div">
+          <Box sx={{ width: '50%', px: 1 }}>
             <Button 
               variant="contained" 
               onClick={onReset}
               startIcon={<RefreshIcon />}
               sx={buttonSx}
+              fullWidth
             >
               Reset
             </Button>
-          </Grid>
-          <Grid item xs={6} component="div">
+          </Box>
+          <Box sx={{ width: '50%', px: 1 }}>
             <Button 
               variant="contained" 
               onClick={onPause}
               startIcon={paused ? <PlayArrowIcon /> : <PauseIcon />}
               sx={actionButtonSx}
               disabled={gameOver}
+              fullWidth
             >
               {paused ? 'Play' : 'Pause'}
             </Button>
-          </Grid>
+          </Box>
         </Grid>
       </Box>
 

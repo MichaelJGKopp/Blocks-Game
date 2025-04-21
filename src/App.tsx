@@ -6,7 +6,7 @@ import './App.css';
 import BlocksBoard from './components/BlocksBoard';
 import GameControls from './components/GameControls';
 import ScorePanel from './components/ScorePanel';
-import { generateRandomPiece, rotateMatrix, checkCollision, createEmptyBoard, Block } from './utils/gameUtils';
+import { generateRandomPiece, rotateMatrix, checkCollision, createEmptyBoard } from './utils/gameUtils';
 
 // Light theme (day mode) with pastel colors
 const lightTheme = createTheme({
@@ -306,16 +306,21 @@ function App() {
   };
 
   // Toggle pause state
-  const togglePause = () => {
+  const togglePause = useCallback(() => {
     if (!gameOver) {
       setPaused(!paused);
     }
-  };
+  }, [gameOver, paused]);
 
   // Handle keyboard controls
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       if (gameOver) return;
+      
+      // Prevent default spacebar behavior to avoid any conflicts
+      if (event.key === ' ') {
+        event.preventDefault();
+      }
       
       switch (event.key) {
         case 'ArrowLeft':

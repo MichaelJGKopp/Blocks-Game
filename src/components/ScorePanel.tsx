@@ -1,6 +1,6 @@
 import React from 'react';
-import { Paper, Box, Typography, Grid } from '@mui/material';
-import { COLORS, Block } from '../utils/gameUtils';
+import { Paper, Box, Typography } from '@mui/material';
+import { Block } from '../utils/gameUtils';
 
 interface ScorePanelProps {
   score: number;
@@ -185,43 +185,50 @@ const ScorePanel: React.FC<ScorePanelProps> = ({ score, level, lines, nextPiece,
             borderRadius: darkMode ? 0 : 8,
           }}
         >
-          <Grid 
-            container 
-            justifyContent="center"
-            alignItems="center"
+          <Box
             sx={{ 
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
               width: 'auto', 
               height: 'auto',
             }}
           >
             {previewShape.map((row, rowIndex) => (
-              <Grid key={`next-row-${rowIndex}`} container item xs={12} justifyContent="center" component="div">
+              <Box 
+                key={`next-row-${rowIndex}`}
+                sx={{ 
+                  display: 'flex',
+                  justifyContent: 'center',
+                  width: '100%'
+                }}
+              >
                 {row.map((cell, cellIndex) => (
-                  <Grid item key={`next-cell-${rowIndex}-${cellIndex}`} component="div">
-                    <Box
-                      sx={{
-                        width: 25,
-                        height: 25,
-                        backgroundColor: cell !== 0 
-                          ? (darkMode 
-                              ? neonColors[nextPiece.color as keyof typeof neonColors] 
-                              : pastelColors[nextPiece.color as keyof typeof pastelColors])
-                          : 'transparent',
-                        // Simple borders matching the main game board
-                        border: cell !== 0 
-                          ? (darkMode 
-                              ? '2px solid rgba(255,255,255,0.3)' 
-                              : '1px solid rgba(0,0,0,0.15)')
-                          : 'none',
-                        boxSizing: 'border-box',
-                        borderRadius: darkMode ? 0 : 0.5, // Match main board block's borderRadius
-                      }}
-                    />
-                  </Grid>
+                  <Box 
+                    key={`next-cell-${rowIndex}-${cellIndex}`}
+                    sx={{
+                      width: 25,
+                      height: 25,
+                      backgroundColor: cell !== 0 
+                        ? (darkMode 
+                            ? neonColors[nextPiece.color as keyof typeof neonColors] 
+                            : pastelColors[nextPiece.color as keyof typeof pastelColors])
+                        : 'transparent',
+                      // Simple borders matching the main game board
+                      border: cell !== 0 
+                        ? (darkMode 
+                            ? '2px solid rgba(255,255,255,0.3)' 
+                            : '1px solid rgba(0,0,0,0.15)')
+                        : 'none',
+                      boxSizing: 'border-box',
+                      borderRadius: darkMode ? 0 : 0.5, // Match main board block's borderRadius
+                    }}
+                  />
                 ))}
-              </Grid>
+              </Box>
             ))}
-          </Grid>
+          </Box>
         </Box>
 
         {/* Game controls instructions */}

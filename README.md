@@ -2,8 +2,6 @@
 
 A modern implementation of the classic Tetris-style block-stacking game built with React, TypeScript, and Material UI.
 
-![Blocks Game Screenshot](screenshot.png)
-
 ## Play Online
 
 Play the game directly in your browser: [Blocks Game](https://michaeljgkopp.github.io/Blocks-Game/)
